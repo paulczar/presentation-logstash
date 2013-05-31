@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
 
-    <title>Brisbane DevOps 30th May 2013 - Logstash</title>
+    <title>Logstash - Primer!</title>
 
     <meta name="description" content="Logstash">
     <meta name="author" content="Paul Czarkowski - http://tech.paulcz.net">
@@ -15,6 +15,7 @@
 
     <link rel="stylesheet" href="css/reveal.min.css">
     <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
     <!-- For syntax highlighting -->
     <link rel="stylesheet" href="lib/css/zenburn.css">
 
@@ -36,47 +37,20 @@
       <div class="slides">
 
         <section>
-          <h3>Brisbane Devops Meetup</h3>
-          <h2>!!! Logstash !!!</h2>
-          <h3> 30th May 2013</h3>
+          <h1>Logstash Primer</h1>
           <p>
             Paul Czarkowski / paul@paulcz.net / @pczarkowski
           </p>
         </section>
 
         <section>
-          <h3>Who am I ?</h3>
-          <h4>More Ops than Dev</h4>
-          <ul>
-            <li>Started out as an SA at several ISPs
-            <li>Moved into Games ... IT Manager @ Pandemic (Brisbane)
-            <li>Moved to BioWare to launch <i>Star Wars: The Old Republic</i>
-            <li>Transferred to EA,  Manage Cloud Team for Infrastruture Operations
-            <li>Through M&As have 9 years tenure at EA.
-          </ul>
-        </section>
-
-        <section>
-          <h3>Who am I ?</h3>
-          <h4>Stuff I like to do ...</h4>
-          <ul>
-            <li>Automation ( and I don't just mean Puppet and/or Chef )
-            <li>Agile ( Scrum / Kanban )
-            <li>Cloud ( OpenStack, Amazon )
-            <li>Monitoring / Logging
-            <li>Solve problems
-            <li>Cook ( I would be a chef if they didn't work so hard for such little pay)
-          </ul>
-        </section>
-
-        <section>
           <h2>What is a log?</h2>
-          <p style="text-align: center;">A log is a human readable, machine parsable representation of an event.<br>   LOG = TIMESTAMP + DATA</p>
+          <p style="text-align: center;">A log is a human readable, machine parsable representation of an event.  A log usually consists of TIMESTAMP + DATA</p>
           <span class="fragment">
-          <p style="text-align: left;"><font color="orange">Jan 19 13:01:13</font> <font color="yellow">paulcz-laptop anacron[7712]: Normal exit (0 jobs run)</font>
-          <p style="text-align: left;"><font color="orange">120607 14:07:00</font> <font color="yellow">InnoDB: Starting an apply batch of log records to the database...</font>
-          <p style="text-align: left;"><font color="orange">[1225306053]</font> <font color="yellow">SERVICE ALERT: FTPSERVER;FTP SERVICE;OK;SOFT;2;FTP OK - 0.029 second response time on port 21 [220 ProFTPD 1.3.1 Server ready.]</font>
-          <p style="text-align: left;"><font color="orange">[Sat Jan 19 01:04:25 2013]</font> <font color="yellow">[error] [client 78.30.200.81] File does not exist: /opt/www/vhosts/crappywebsite/html/robots.txt</font>
+          <p style="text-align: left;"><font color="orange">Jan 19 13:01:13</font> <font color="red">paulcz-laptop anacron[7712]: Normal exit (0 jobs run)</font>
+          <p style="text-align: left;"><font color="orange">120607 14:07:00</font> <font color="red">InnoDB: Starting an apply batch of log records to the database...</font>
+          <p style="text-align: left;"><font color="orange">[1225306053]</font> <font color="red">SERVICE ALERT: FTPSERVER;FTP SERVICE;OK;SOFT;2;FTP OK - 0.029 second response time on port 21 [220 ProFTPD 1.3.1 Server ready.]</font>
+          <p style="text-align: left;"><font color="orange">[Sat Jan 19 01:04:25 2013]</font> <font color="red">[error] [client 78.30.200.81] File does not exist: /opt/www/vhosts/crappywebsite/html/robots.txt</font>
           </span>
         </section>
 
@@ -116,27 +90,14 @@
           <section>
              <h2>Logs are machine parseable</h2>
              <img src="images/apache_regex.png">
-             <p>Actual Regex to parse apache logs.</p>
+             <pre style="text-align:left;"><code style="font-size:75%">
+208.115.111.74 - - [13/Jan/2013:04:28:55 -0500] "GET /robots.txt HTTP/1.1" 
+    301 303 "-" "Mozilla/5.0 (compatible; Ezooms/1.0; ezooms.bot@gmail.com)"
+            </code></pre>
           </section>
           <section>
             <h2>Logs are machine parseable</h2>             
             <img src="images/apache_regex_WAT.png">
-             <p>Actual Regex to parse apache logs.</p>
-          </section>
-
-          <section>
-             <h2>Logs are machine parseable</h2>             
-            <img src="images/apache-regex-dude.png" height="50%" width="50%">
-            <ul>
-              <li class="">Users will now call PERL Ninja to solve every problem they have -  Hero Syndrome.
-              <li class="">Does it work for every possible log line ?
-              <li class="">Who's going to maintain that shit ?
-              <li class="">Is it even useful without being surrounded by [bad] sysadmin scripts ?
-            </ul>
-          </section>   
-
-          <section>
-             <h2>So we agree ... This is Bad.</h2>
              <pre style="text-align:left;"><code style="font-size:75%">
 208.115.111.74 - - [13/Jan/2013:04:28:55 -0500] "GET /robots.txt HTTP/1.1" 
     301 303 "-" "Mozilla/5.0 (compatible; Ezooms/1.0; ezooms.bot@gmail.com)"
@@ -168,8 +129,7 @@
 
         <section>
           <h2>Logstash Plugins...</h2>
-          <img class="" src="images/plugin_types.png">
-          <p>cat <i>chain.plugins</i> | grep <i>together</i> | sed 's/<i>like</i>/<i>unix</i>/' &gt; <i>pipeline</i></p>
+          <img class="fragment" src="images/plugin_types.png">
         </section>
         <section>
           <h2>Logstash Plugins...</h2>
@@ -207,6 +167,17 @@
             <li>lumberjack
             <li>...  
           </ul>
+        </section>
+
+        <section>
+          <h2>Any idiot can ...</h2>
+          <p>write logstash modules</p>
+          <ul>
+            <li>Input - Snmptrap
+            <li>Filter - Translate
+          </ul>
+          <br>
+          <p>Can do powerful things with [ boilerplate + ] a few lines of ruby 
         </section>
 
         <section>
@@ -260,7 +231,7 @@ input {
 }
 filter {
   grok {
-    type    => "apache"
+    type => "apache"
     pattern => "%{COMBINEDAPACHELOG}"
   }
   date {
@@ -277,9 +248,9 @@ filter {
              <pre><code>
 output {
   statsd {
-    type      => "apache"
-    increment => "apache.response.%{response}"
+    type => "apache"
     # Count one hit every event by response
+    increment => "apache.response.%{response}"
   }
   elasticsearch {
     type => "apache"
@@ -301,40 +272,24 @@ output {
           </section>                              
 
           <section>
-            <h3>Analyze Twitter Streams</h3>
-            <ul>
-              <li>Marketing
-              <li>Customer feedback
-              <li>good for load testing - 'bieber'
-            </ul>
-            <image class="fragment" src="images/Bieber.jpg">
+            <h3>Literacy Amongst Bieber Fans.</h3>
+            <image src="images/Bieber.jpg">
           </section>
-
           <section>
             <h2>Logstash - Twitter Input</h2>
             <pre><code>
 input {
   twitter {
-    type      => "twitter"
-    keywords  => ["bieber","beiber"]
-    user      => "username"
-    password  => "*******"
-  }
-}
-output {
-  elasticsearch {
     type => "twitter"
+    keywords => ["bieber","beiber"]
+    user => "username"
+    password => "*******"
   }
 }
             </code></pre>
           </section>
           <section>
           <img src="images/kibana-bieber.png">
-          <ul>
-            <li>4%  Bieber Fans can't spell his name.
-            <li>10% Tweets from Blackberry ( 50ish business execs? )
-            <li>~ 200 Bieber tweets per minute.  
-          </ul>
           </section>
           <section>
           <img src="images/kibana_bieber.png">
@@ -343,76 +298,18 @@ output {
           <img src="images/kibana_bieber2.png">
           </section>
 
-          <section>
-            <h3>Already have Central Rsyslog/SyslogNG Server?</h3>
-<pre class=""><code>
-input { 
-  file {
-    type => "syslog"
-    path => ["/data/rsyslog/**/*.log"]
-  }
-}
-filter {
-  ### a bunch of groks, a date, and other filters
-}
-
-output {
-  type => "elasticsearch"
-}
-</code></pre>
-          </section>
-
-          <section>
-            <h3>Act as a Central Syslog Server </h3>
-            <h3>Good for Appliances / Switches</h3>
-<pre class=""><code>
-input { 
-  tcp {
-    type => "syslog"
-    port => "514"
-  }
-  udp {
-    type => "syslog"
-    port => "514"
-  }
-}
-filter {
-  ### a bunch of groks, a date, and other filters
-}
-
-output {
-  type => "elasticsearch"
-}
-</code></pre>
-          </section>
         <section>
-          <h2>In Cloud?  Don't own network?</h2>
-          <p>Use an encrypted Transport<p>
-<p><b>Logstash Agent</b></p>
-<pre class=""><code>
-input  {   file { ... }    }
-output {
-  lumberjack {
-    hosts           => ["logstash-indexer1", "logstash-indexer2"]
-    ssl_certificate => "/etc/ssl/logstash.crt"  
-  }
-}
-</code></pre>
-<p><b>Logstash Indexer</b></p>
-<pre class=""><code>
-input {
-  lumberjack {
-    ssl_certificate => "/etc/ssl/logstash.crt"  
-    ssl_key         => "/etc/ssl/logstash.key"
-  }    
-}
-output { elasticsearch {} }
-</code></pre>
-
+          <h2>performance... events/sec</h2>
+          <image src="images/logstash_metrics.PNG">
+          <ul>
+            <li>HP BL460, 48Gb, 24 Cores.
+            <li>Several Filters - Groks, Mutates, etc
+            <li> + 8 workers
+          </ul>
         </section>
 
         <section>
-          <h2>System Metrics ?</h2>
+          <h2>Other cool stuff</h2>
           <pre>
 input {
   exec {
@@ -442,59 +339,10 @@ output {
           </pre>
         </section>          
 
-        <section>
-          <h2>Unique Problem to solve ?</h2>
-          <p>write a logstash module!</p>
-          <ul>
-            <li>Input - Snmptrap
-            <li>Filter - Translate
-          </ul>
-          <br>
-          <p>Can do powerful things with [ boilerplate + ] a few lines of ruby 
-        </section>
-
 
         <section>
           <h2>Scaling logstash</h2>          
-          <h3>Use Queues ( RabbitMQ, Redis) to help <br>scale horizontally.</h3>
           <img src="images/logstash-scale.png">
-          <p>Local log dir on clients = cheap queue</p>
-        </section>
-
-        <section>
-          <h2>performance... events/sec</h2>
-          <image src="images/logstash_metrics.PNG">
-          <ul>
-            <li>HP BL460, 48Gb, 24 Cores.
-            <li>Several Filters - Groks, Mutates, etc
-            <li>jump in performance from setting 8 filter workers (-w 8)
-          </ul>
-        </section>
-
-        <section>
-          <h2>Misc considerations</h2>          
-          <ul>
-            <li>file limits ( lol 1024 )
-            <li>Java ( use JRE7 for Performance )
-            <li>Limit Memory Usage
-              <ul>
-                <li>Elasticsearch - ~50% RAM for Java Heap
-                <li>Redis / Rabbit - 1Gb 
-                <li>Logstash - 256Mb -> 512Mb for Java Heap
-                <li>Be safe - avoid deadly OOM killer.
-              </ul>
-            <li>Kibana / Elasticsearch Security - Behind Reverse Proxy!
-        </section>
-
-        <section>
-          <h2>ElasticSearch</h2>
-          <ul>
-            <li>Primary Storage/Search engine for logstash
-            <li>Clusterable/Scalable Search Engine
-            <li>RESTful API
-            <li>Lucene Syntax
-            <li>Very large topic on its own...
-          </ul>
         </section>
 
         <section>
@@ -504,25 +352,11 @@ output {
             <li>http://www.logstashbook.com/ [James Turnbull]
             <li>https://github.com/paulczar/vagrant-logstash
             <li>http://jujucharms.com/charms/precise/logstash-indexer
-            <li>Logstash Puppet (github/electrical)
-            <li>Logstash Chef (github/lusis)
           </uL>
         </section>
 
         <section>
-          <h3>Other tools you should all be using...</h3>
-          <ul>
-            <li>Vagrant
-            <li>Chef / Puppet ( obviously! )
-            <li>FPM
-            <li>Omnibus
-            <li>LXC containers for lightweight VMs
-            <li>OpenStack ( run a cloud locally for dev )
-          </uL>
-        </section>
-
-        <section>
-          <h1>Questions?</h1>
+          <h1>KTHXBAI</h1>
           <p>
             Paul Czarkowski / paul@paulcz.net / @pczarkowski
           </p>
